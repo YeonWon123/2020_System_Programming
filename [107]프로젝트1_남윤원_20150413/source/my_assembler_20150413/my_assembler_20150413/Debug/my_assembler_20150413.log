@@ -1,0 +1,15 @@
+﻿  my_assembler_20150413.c
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(187,17): warning C4013: 'isspace'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(708,33): warning C4047: '함수': 'int'의 간접 참조 수준이 'char [2]'과(와) 다릅니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(708,33): warning C4024: 'memset': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(1142,35): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(1226,35): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(1591,31): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(1647,43): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(1711,43): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(1780,39): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(2055,13): warning C4098: 'make_objectcode_output': 'void' 함수에서 값을 반환하고 있습니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(1491,10): warning C4101: 'T_SAVE' :참조되지 않은 지역 변수입니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(278): warning C4716: 'token_parsing': 값을 반환해야 합니다.
+C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\my_assembler_20150413\my_assembler_20150413.c(1450): warning C4716: 'assem_pass2': 값을 반환해야 합니다.
+  my_assembler_20150413.vcxproj -> C:\Users\weonw\Desktop\4학년 1학기\시스템 프로그래밍\[107]프로젝트1_남윤원_20150413\source\my_assembler_20150413\Debug\my_assembler_20150413.exe

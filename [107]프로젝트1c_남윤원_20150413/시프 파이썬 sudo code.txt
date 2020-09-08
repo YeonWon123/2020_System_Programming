@@ -1,0 +1,116 @@
+뭐할지 미리 써놓기
+
+def main():
+    assembler = Assembler("inst.data")
+    assembler.loadInputFile("input.txt")
+    assembler.pass1()
+    assembler.printSymbolTable("symtab_20150413")
+    assembler.printLiteralTable("literaltab_20150413")
+    assembler.pass2()
+    assembler.printObjectCode("output_20150413")
+
+1. Assembler에서 inst.data를 받아옴 -> instTable에 저장
+2. Assembler에서 input.txt를 받아옴 -> line에 저장
+
+3. pass1 수행
+ section에 따라 tokenTable을 생성 -> tokenTable에는 tokenList로 구성, 
+					        tokenList는 label, operator, operand[], comment, pc로 구성
+ section에 따라 symbolTable을 생성
+ section에 따라 literalTable을 생성
+ section에 따라 lengthList를 생성
+ section에 따라 EXTDEF_List를 생성 -> Hash로(Dictionary), <이름, (pc, 명령어 형식, 부호)>
+ section에 따라 EXTREF_List를 생성 -> Hash로(Dictionary), <이름, (pc, 명령어 형식, 부호)>
+ pc 값은 0으로 시작
+ now_section 값도 0으로 시작
+ for (line수만큼) {
+	label, operator, operand[], comment, loc를 먼저 생성해 놓음
+
+	(0) 먼저 새로운 section이라면 ( token.operator = START / CSECT )
+		lengthList에 값 저장
+		tokenTable, symbolTable, literalTable을 새로 생성
+	    	pc 값도 0으로 만들어 놓음
+	(1) 주석을 먼저 판별 -> 주석이면 token중 comment에 넣고 다음 line 넘김
+	(2) Label이 있다면 -> symboltable[now_section]에 저장
+		(2)-1. operator가 EQU일 경우 주소값 판별
+	(3) operator가 있다면
+		(3)-1. LTORG나 END인가?
+			이 경우 현재 section의 literalTable에 있는 값들의 주소를 지정해 준다.
+		(3)-2. EXTDEF나 EXTREF인가?
+			EXTDEF_List나 EXTREF_List에 더한다.
+		(3)-2. 아니라면 주소값을 증가시킨다.
+			Hash에 값이 있다면 Hash.value를 하면 됨
+			Hash에 값이 없다면 BYTE, WORD, RESW, RESB 구분하여 pc값을 더해주자
+	(4) operand[0]의 시작이 =일 경우 보관해놓음 (LTORG나 END가 올 경우 그때 literalTable에 저장하기 위함)
+	(5) 나머지는 comment, pc값 할당 후 다음 라인으로 ㄱㄱ
+ }
+
+
+4. symbolTable 출력 -> 파일 출력
+5. literalTable 출력 -> 파일 출력
+6. pass2 수행 -> 기계어를 출력하는 부분!
+
+ codeList 생성 -> 기계어
+ codeList_loc 생성 -> 주소
+
+ for(TokenTable 수만큼) {
+	codeList.append(New List)
+	for (TokenTable 안에 들어 있는 tokenList 수만큼)
+	token에 있는 label, operator, operand[], comment, loc, pc값을 가져오자
+	switch (operator)
+	(1) null이라면 -> 주석이므로 기계어를 생성하지 않고 넘어간다
+	(2) START라면, 기계어 생성하지 않고 넘어간다
+	(3) CSECT라면, now_section++ 후 넘어간다.
+	(4) RESW라면, 빈 공간을 만들어서 T줄을 구분할 수 있게 한다. 이 경우 주소값은 그대로 넣는다.
+	(5) EXTREF이거나 EXTDEF라면 -> 넘어간다 (pass1에서 수행했음)
+	(6) BYTE가 나왔을 경우 operand에 있는 값을 그대로 넣거나(X) ascii로 바꿔서(C) 넣는다.
+	(7) WORD가 나왔을 경우 연산이 불가능하다면 000000을 넣는다.
+	(8) LTORG 또는 END가 나왔을 경우 현재 section에 있는 literalTable에 있는 값들을 출력해야 한다. 
+	    이를 출력하자.
+	String machine 생성
+	(9) 이 외의 명령어들은 opcode에 해당하는 기계어를 찾아서, 기계어를 생성해야 한다.
+		1. instTable Dictionary에서 opcode를 찾는다.
+		2. opcode의 첫번째 자리 = machine[0]
+
+		3. 2형식이라면 
+		   opcode의 두번째 자리 = machine[1]
+		   operand[0] :  X, A, S, T 레지스터를 쓰는지 여부를 판단해서 machine[2]를 결정한다.
+		   operand[1] :  X, A, S, T 레지스터를 쓰는지 여부를 판단해서 machine[3]을 결정한다.
+		   codeList.append(machine)
+
+		4. 3,4형식이라면
+		   4-1 만약 명령어가 RSUB이라면 machine[1] = F, machine[2] ~ machine[5] = 0
+		        codeList.append(machine)
+		   4-2 아니라면
+		   opcode의 두번째 자리에서 8, 4 + n i = machine[1]
+		   x b p e = machine[2]
+		   indirect addressing인가? (@를 쓰는 경우) (n, i : 1, 0)
+			-> @ 뒤에 있는 주소의 값이 target이 되기 때문에, @ 뒤에 나오는 곳의 주소를 파악함
+			    그 주소에서 현재 pc의 값을 빼면 됨
+		   Immediate addressing인가? (#를 쓰는 경우) (n, i : 0, 1)
+			-> # 뒤에 있는 값을 바로 반영하면 됨
+		   둘 다 아닌가? (n, i : 1,1인 경우)
+			-> target을 찾아야 함 (operand[0]에서 찾자)
+			-> operand[0]이 EXTREFS인 경우 기계어 주소값은 전부 0이 됨
+			-> operand[0]이 symbol인 경우 주소값은 symbol에 있는 값 - pc
+			-> operand[0]이 literal인 경우 주소값은 literal에 있는 값 - pc
+			-> 다 아니면 오류
+			
+			-> pc-relative인지 확인하고, 차이가 1000(16진수)이 넘지 않으면 계산, 단 음수일 경우 보수 적용
+			-> 주소값을 machine[3] ~ machine[5] (3형식) / machine[3] ~ machine[7] (4형식) 까지 넣은 뒤
+			-> codeList.append(machine)
+ }
+
+7. printObjectCode 출력 -> 파일 출력, codeList를 바탕으로 objectCode를 생성해야 함
+ for (codeList 줄 수 만큼) {
+    if (CodeList[i]가 New List라면) 
+	if (i != 0) 지난 M, E라인 출력
+	section++
+ 	H라인 출력 : H + symtablist[section][0] + "000000" + lengthlist[section]
+	D라인, R라인 출력
+    else
+	T라인 출력
+	T + 6자리(시작지점) + 2자리(길이) + 58자리(명령어 나열, 1D = 29, 29*2자리의 16진수 명령어 나열 가능)
+	T라인의 길이가 0이 아니면 T라인에 더해주고
+	T라인의 길이가 58자리가 넘어가는 경우에 T라인 하나를 만들어서 출력한다.
+ }
+ 마지막 줄 T라인, M라인, E라인을 만들어서 출력해 준다.
